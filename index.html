@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aura of Love | Digital Union</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,400&family=Monsieur+La+Doulaise&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+    <style>
+        :root { --pink: #fdf2f4; --rose: #9d4658; --gold: #c5a059; --white: #ffffff; }
+        body { background-color: var(--pink); font-family: 'Montserrat', sans-serif; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+        
+        .page { display: none; width: 90%; max-width: 500px; background: var(--white); padding: 40px; border-radius: 30px; text-align: center; box-shadow: 0 15px 50px rgba(157, 70, 88, 0.1); box-sizing: border-box; }
+        .active { display: block !important; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        h1 { font-family: 'Monsieur La Doulaise', cursive; font-size: 3.5rem; color: var(--rose); margin: 0; }
+        h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; }
+        
+        input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #eee; border-radius: 10px; box-sizing: border-box; background: #fafafa; font-family: inherit; }
+        .btn { background: var(--rose); color: white; border: none; padding: 16px 30px; border-radius: 50px; cursor: pointer; width: 100%; font-weight: 600; margin-top: 15px; }
+        .hint { font-size: 11px; color: #888; margin-top: 5px; text-align: left; }
+
+        /* Hidden Certificate */
+        #cert-wrap { 
+            width: 800px; height: 600px; background: #fffcf9; border: 12px double var(--gold); 
+            padding: 20px; box-sizing: border-box; position: absolute; top: -9999px; left: -9999px;
+        }
+        .cert-inner { border: 1px solid var(--gold); height: 100%; display: flex; flex-direction: column; justify-content: space-between; padding: 40px; box-sizing: border-box; background: white; text-align: center; }
+        .cert-main-row { display: flex; align-items: center; justify-content: space-between; margin: 20px 0; }
+        .frame { width: 160px; height: 160px; border-radius: 50%; overflow: hidden; border: 4px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); background: #eee; }
+        .frame img { width: 100%; height: 100%; object-fit: cover; }
+        .sig-box img { max-width: 150px; max-height: 60px; mix-blend-mode: multiply; filter: contrast(1.2); }
+    </style>
+</head>
+<body>
+
+    <div id="p1" class="page active">
+        <h1>Welcome</h1>
+        <h2>Aura of Love</h2>
+        <p>A sacred space for your digital union.</p>
+        <button class="btn" onclick="showPage('p2')">Start Journey</button>
+    </div>
+
+    <div id="p2" class="page">
+        <h2>Identity</h2>
+        <input type="text" id="name1" placeholder="Your Name">
+        <input type="text" id="name2" placeholder="Partner's Name">
+        <input type="email" id="myEmail" placeholder="Your Notification Email">
+        
+        <div class="hint">Paste Drive Links for Photos/Sigs:</div>
+        <input type="text" id="l1" placeholder="Your Photo Link">
+        <input type="text" id="l2" placeholder="Partner's Photo Link">
+        <input type="text" id="s1" placeholder="Your Signature Link">
+        <input type="text" id="s2" placeholder="Partner's Signature Link">
+        
+        <button class="btn" onclick="processLinks()">Save Details</button>
+    </div>
+
+    <div id="p3" class="page">
+        <h2>Adoration</h2>
+        <p>What do you love most about them?</p>
+        <textarea id="loveAbout" rows="4" placeholder="Their kindness, their soul..."></textarea>
+        <button class="btn" onclick="showPage('p4')">Next</button>
+    </div>
+
+    <div id="p4" class="page">
+        <h2>The Proposal</h2>
+        <input type="email" id="emailPartner" placeholder="Partner's Email">
+        <textarea id="proposalMsg" rows="4" placeholder="Your proposal message..."></textarea>
+        <button class="btn" onclick="sendToPartner()">Send to Partner</button>
+    </div>
+
+    <div id="p5" class="page">
+        <h2>For the Beloved</h2>
+        <p id="partner-prop-display" style="font-style: italic; background:#fdf2f4; padding:15px; border-radius:10px;"></p>
+        <textarea id="vows" rows="4" placeholder="Write your vows here..."></textarea>
+        <button class="btn" onclick="partnerFinalizes()">Accept & Seal ❤️</button>
+    </div>
+
+    <div id="p6" class="page">
+        <h1>Congratulations!</h1>
+        <p>The bond is sealed. Notification sent to initiator.</p>
+        <button class="btn" onclick="showPage('p7')">View Certificate</button>
+    </div>
+
+    <div id="p7" class="page">
+        <h2>Preview</h2>
+        <div id="preview-area" style="width:100%; border:1px solid #ddd; min-height:100px; background:#fff;"></div>
+        <button class="btn" onclick="showPage('p8')">Download Page</button>
+    </div>
+
+    <div id="p8" class="page">
+        <h1>Official License</h1>
+        <p>Keep this memory forever.</p>
+        <button class="btn" id="dl-btn" onclick="download()">Download PNG</button>
+    </div>
+
+    <div id="cert-wrap">
+        <div class="cert-inner">
+            <div>
+                <p style="letter-spacing: 5px; color: var(--gold); font-size: 10px; margin: 0;">ESTABLISHED IN LOVE</p>
+                <h1 style="font-family: 'Monsieur La Doulaise', cursive; font-size: 4rem; margin: 10px 0; color: var(--rose);">Marriage License</h1>
+            </div>
+            <div class="cert-main-row">
+                <div class="frame"><img id="v1" crossorigin="anonymous"></div>
+                <div style="flex:1; padding:0 20px;">
+                    <h2 id="disp-names"></h2>
+                    <p id="disp-vows" style="font-size:12px; font-style:italic; color:#666;"></p>
+                </div>
+                <div class="frame"><img id="v2" crossorigin="anonymous"></div>
+            </div>
+            <div style="font-family:'Monsieur La Doulaise',cursive; font-size:2.5rem; color:var(--rose);">Infinite Love</div>
+            <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+                <div class="sig-box"><img id="cert-sig1"><div style="border-top:1px solid var(--gold); font-size:10px;" id="lbl1"></div></div>
+                <div class="sig-box"><img id="cert-sig2"><div style="border-top:1px solid var(--gold); font-size:10px;" id="lbl2"></div></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        emailjs.init("6Esqq34VB6yAXZCB3");
+
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            if(id === 'p7') renderPreview();
+        }
+
+        function convertDriveLink(url) {
+            const id = url.match(/\/d\/([^\/]+)/);
+            return id ? `https://lh3.googleusercontent.com/u/0/d/${id[1]}` : url;
+        }
+
+        function processLinks() {
+            document.getElementById('v1').src = convertDriveLink(document.getElementById('l1').value);
+            document.getElementById('v2').src = convertDriveLink(document.getElementById('l2').value);
+            document.getElementById('cert-sig1').src = convertDriveLink(document.getElementById('s1').value);
+            document.getElementById('cert-sig2').src = convertDriveLink(document.getElementById('s2').value);
+            showPage('p3');
+        }
+
+        function sendToPartner() {
+            const n1 = document.getElementById('name1').value;
+            const n2 = document.getElementById('name2').value;
+            const link = `${window.location.origin}${window.location.pathname}?partner=true&n1=${encodeURIComponent(n1)}&n2=${encodeURIComponent(n2)}&msg=${encodeURIComponent(document.getElementById('proposalMsg').value)}&owner=${encodeURIComponent(document.getElementById('myEmail').value)}&l1=${encodeURIComponent(document.getElementById('l1').value)}&l2=${encodeURIComponent(document.getElementById('l2').value)}&s1=${encodeURIComponent(document.getElementById('s1').value)}&s2=${encodeURIComponent(document.getElementById('s2').value)}`;
+
+            emailjs.send("service_ip92c2u", "template_rq2ywdn", {
+                to_email: document.getElementById('emailPartner').value,
+                from_name: n1,
+                message: document.getElementById('proposalMsg').value,
+                link: link
+            }).then(() => alert("Proposal Sent!"));
+        }
+
+        window.onload = function() {
+            const p = new URLSearchParams(window.location.search);
+            if(p.get('partner')) {
+                document.getElementById('name1').value = p.get('n1');
+                document.getElementById('name2').value = p.get('n2');
+                document.getElementById('l1').value = p.get('l1');
+                document.getElementById('l2').value = p.get('l2');
+                document.getElementById('s1').value = p.get('s1');
+                document.getElementById('s2').value = p.get('s2');
+                document.getElementById('partner-prop-display').innerText = p.get('msg');
+                processLinks();
+                showPage('p5');
+            }
+        };
+
+        function partnerFinalizes() {
+            const n1 = document.getElementById('name1').value;
+            const n2 = document.getElementById('name2').value;
+            document.getElementById('disp-names').innerText = n1 + " & " + n2;
+            document.getElementById('disp-vows').innerText = document.getElementById('vows').value;
+            document.getElementById('lbl1').innerText = n1;
+            document.getElementById('lbl2').innerText = n2;
+            
+            const owner = new URLSearchParams(window.location.search).get('owner');
+            emailjs.send("service_ip92c2u", "template_rq2ywdn", {
+                to_email: owner, from_name: n2, message: "Accepted! Link to cert: " + window.location.href
+            });
+            showPage('p6');
+        }
+
+        function renderPreview() {
+            const area = document.getElementById('preview-area');
+            setTimeout(() => {
+                html2canvas(document.getElementById('cert-wrap'), { useCORS: true, allowTaint: true }).then(canvas => {
+                    area.innerHTML = "";
+                    area.appendChild(canvas);
+                    canvas.style.width = "100%";
+                });
+            }, 2000);
+        }
+
+        function download() {
+            html2canvas(document.getElementById('cert-wrap'), { scale: 3, useCORS: true }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'Union_Certificate.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        }
+    </script>
+</body>
+</html>
