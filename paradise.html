@@ -1,189 +1,233 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Personal Paradise 🌸</title>
-<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&display=swap" rel="stylesheet">
-<style>
-  body {
-    font-family: 'Comfortaa', cursive;
-    margin: 0; padding: 0;
-    height: 100vh; overflow: hidden;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    background: #f8f3f0;
-    transition: background 0.5s;
-    position: relative;
-  }
-  h1 { font-size: 3rem; color:#ff8c94; margin-bottom:20px; text-align:center; animation: fadeIn 2s;}
-  .btn { background:#ffd6ba; border:none; padding:15px 25px; margin:10px; border-radius:15px; font-size:1.2rem; cursor:pointer; box-shadow:0px 5px 10px rgba(0,0,0,0.1); transition:0.3s; }
-  .btn:hover { background:#ffb3a7; transform: translateY(-5px);}
-  #dashboard {display:none; flex-direction:column; align-items:center;}
-  #avatarCanvas {width:150px; height:150px; border-radius:50%; background:#ffe0e0; margin-top:20px;}
-  #gameScore, #cardGameArea, #clickerScore {margin-top:10px; font-weight:bold;}
-  .shape {position:absolute; border-radius:50%; opacity:0.7; cursor:pointer;}
-  .card {width:80px; height:120px; border-radius:10px; background:#ffe0e0; display:flex; align-items:center; justify-content:center; font-weight:bold; font-size:1.2rem; cursor:pointer; margin:5px; box-shadow: 0 5px 8px rgba(0,0,0,0.2); transition:0.3s;}
-  .card:hover {transform: scale(1.1);}
-  @keyframes fadeIn {0%{opacity:0;transform:translateY(-20px);}100%{opacity:1;transform:translateY(0);}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aura of Love | Digital Union</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,400&family=Monsieur+La+Doulaise&family=Montserrat:wght@300;400&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+    <style>
+        :root { --pink: #fdf2f4; --rose: #9d4658; --gold: #c5a059; --white: #ffffff; }
+        body { background-color: var(--pink); font-family: 'Montserrat', sans-serif; margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+        
+        .page { display: none; width: 90%; max-width: 500px; background: var(--white); padding: 40px; border-radius: 30px; text-align: center; box-shadow: 0 15px 50px rgba(157, 70, 88, 0.1); box-sizing: border-box; }
+        .active { display: block !important; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        h1 { font-family: 'Monsieur La Doulaise', cursive; font-size: 3.5rem; color: var(--rose); margin: 0; }
+        h2 { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; }
+        
+        input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #eee; border-radius: 10px; box-sizing: border-box; background: #fafafa; font-family: inherit; }
+        .btn { background: var(--rose); color: white; border: none; padding: 16px 30px; border-radius: 50px; cursor: pointer; width: 100%; font-weight: 600; margin-top: 15px; }
+
+        /* Names on Certificate */
+        #disp-names { 
+            font-family: 'Playfair Display', serif; 
+            font-size: 2.2rem; 
+            color: #333; 
+            margin: 10px 0;
+            font-style: italic;
+        }
+
+        /* Hidden Certificate */
+        #cert-wrap { 
+            width: 800px; height: 600px; background: #fffcf9; border: 12px double var(--gold); 
+            padding: 20px; box-sizing: border-box; position: absolute; top: -9999px; left: -9999px;
+        }
+        .cert-inner { border: 1px solid var(--gold); height: 100%; display: flex; flex-direction: column; justify-content: space-between; padding: 40px; box-sizing: border-box; background: white; text-align: center; }
+        .cert-main-row { display: flex; align-items: center; justify-content: space-between; margin: 15px 0; }
+        .frame { width: 160px; height: 160px; border-radius: 50%; overflow: hidden; border: 4px solid white; box-shadow: 0 4px 10px rgba(0,0,0,0.1); background: #eee; }
+        .frame img { width: 100%; height: 100%; object-fit: cover; }
+        .sig-box { width: 180px; }
+        .sig-box img { max-width: 150px; max-height: 60px; mix-blend-mode: multiply; filter: contrast(1.1); }
+        .sig-label { border-top: 1px solid var(--gold); font-family: 'Cormorant Garamond', serif; font-size: 12px; margin-top: 5px; color: #555; }
+        #disp-date { font-family: 'Cormorant Garamond', serif; font-size: 14px; color: var(--gold); letter-spacing: 2px; }
+    </style>
 </head>
 <body>
 
-<!-- Welcome Screen -->
-<div id="welcomeScreen">
-  <h1>Welcome to Paradise 🌸</h1>
-  <button class="btn" onclick="enterParadise()">Enter Paradise</button>
-</div>
+    <div id="p1" class="page active">
+        <h1>Welcome</h1>
+        <h2>Aura of Love</h2>
+        <button class="btn" onclick="showPage('p2')">Enter the Union</button>
+    </div>
 
-<!-- Main Dashboard -->
-<div id="dashboard">
-  <h1>Paradise 🌸</h1>
-  <button class="btn" onclick="playCatchGame()">Catch Shapes Game 🎮</button>
-  <button class="btn" onclick="playCardGame()">Card Adventure 🃏</button>
-  <button class="btn" onclick="playClickerGame()">Clicker Game 🔵</button>
-  <button class="btn" onclick="playQuiz()">Fun Quiz ❓</button>
-  <button class="btn" onclick="playMusic()">Play/Pause Music 🎵</button>
-  <button class="btn" onclick="createAvatar()">Create Avatar 🧑‍🎨</button>
-  <button class="btn" onclick="changeBackground()">Change Background 🌈</button>
-  
-  <canvas id="avatarCanvas"></canvas>
-  <div id="gameScore"></div>
-  <div id="clickerScore"></div>
-  <div id="cardGameArea"></div>
-  <div id="quizArea"></div>
-</div>
+    <div id="p2" class="page">
+        <h2>The Couple</h2>
+        <input type="text" id="name1" placeholder="Your Full Name">
+        <input type="text" id="name2" placeholder="Partner's Full Name">
+        <input type="email" id="initEmail" placeholder="Your Email (to receive cert)">
+        <input type="date" id="unionDate">
+        
+        <div style="text-align: left; font-size: 11px; color: #888; margin-top: 10px;">Paste Drive links (Anyone with Link):</div>
+        <input type="text" id="l1" placeholder="Your Photo Link">
+        <input type="text" id="l2" placeholder="Partner's Photo Link">
+        <input type="text" id="s1" placeholder="Your Signature Link">
+        <input type="text" id="s2" placeholder="Partner's Signature Link">
+        
+        <button class="btn" onclick="processLinks()">Save & Continue</button>
+    </div>
 
-<!-- Music -->
-<audio id="music" src="https://cdn.pixabay.com/download/audio/2022/02/15/audio_46756a4d5e.mp3?filename=chill-lounge-ambient-11057.mp3" loop></audio>
+    <div id="p3" class="page">
+        <h2>Adoration</h2>
+        <textarea id="loveAbout" rows="4" placeholder="What do you love most about them?"></textarea>
+        <button class="btn" onclick="showPage('p4')">Next</button>
+    </div>
 
-<script>
-let userName = prompt("Hey! What’s your name?", "Friend");
+    <div id="p4" class="page">
+        <h2>The Proposal</h2>
+        <input type="email" id="emailPartner" placeholder="Partner's Email">
+        <textarea id="proposalMsg" rows="4" placeholder="Your proposal message..."></textarea>
+        <button class="btn" onclick="sendToPartner()">Send Proposal</button>
+    </div>
 
-/* --- Set Personalized Titles --- */
-document.querySelector("#welcomeScreen h1").innerText = `Welcome to ${userName}'s Paradise 🌸`;
-document.querySelector("#dashboard h1").innerText = `${userName}'s Paradise 🌸`;
+    <div id="p5" class="page">
+        <h2>Acceptance</h2>
+        <p id="partner-prop-display" style="font-style: italic; color: #666; font-size: 14px;"></p>
+        <textarea id="vows" rows="4" placeholder="Write your vows here..."></textarea>
+        <button class="btn" onclick="partnerFinalizes()">Accept & Complete ❤️</button>
+    </div>
 
-/* --- Welcome Screen --- */
-function enterParadise() {
-  document.getElementById("welcomeScreen").style.display = "none";
-  document.getElementById("dashboard").style.display = "flex";
-}
+    <div id="p6" class="page">
+        <h1>Union Sealed!</h1>
+        <p>The bond is official. The initiator will receive the certificate via email.</p>
+        <button class="btn" onclick="showPage('p7')">Preview Now</button>
+    </div>
 
-/* --- Background Changer --- */
-function changeBackground() {
-  const colors = ["#f8f3f0","#e3fdfd","#fef9ef","#fce4ec","#fff0f5"];
-  document.body.style.background = colors[Math.floor(Math.random()*colors.length)];
-}
+    <div id="p7" class="page">
+        <h2>The License</h2>
+        <div id="preview-area" style="width:100%; border:1px solid #eee; margin-bottom: 10px;"></div>
+        <button class="btn" onclick="showPage('p8')">Go to Download</button>
+    </div>
 
-/* --- Music --- */
-function playMusic() {
-  const music = document.getElementById("music");
-  music.paused ? music.play() : music.pause();
-}
+    <div id="p8" class="page">
+        <h1>Save Your Memory</h1>
+        <button class="btn" id="dl-btn" onclick="download()">Download PNG</button>
+    </div>
 
-/* --- Avatar Creation --- */
-function createAvatar() {
-  const canvas = document.getElementById("avatarCanvas");
-  const ctx = canvas.getContext("2d");
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.fillStyle = `hsl(${Math.random()*360},70%,80%)`;
-  ctx.beginPath();
-  ctx.arc(75,75,70,0,Math.PI*2);
-  ctx.fill();
-  // Eyes
-  ctx.fillStyle="#333";
-  ctx.beginPath();
-  ctx.arc(50,60,8,0,Math.PI*2);
-  ctx.arc(100,60,8,0,Math.PI*2);
-  ctx.fill();
-  // Smile
-  ctx.strokeStyle="#333"; ctx.lineWidth=4;
-  ctx.beginPath(); ctx.arc(75,90,35,0,Math.PI); ctx.stroke();
-  // Hat (random)
-  if(Math.random()>0.5){
-    ctx.fillStyle="#ffb3a7"; ctx.fillRect(35,15,80,25);
-  }
-}
+    <div id="cert-wrap">
+        <div class="cert-inner">
+            <div>
+                <p style="letter-spacing: 5px; color: var(--gold); font-size: 10px; margin: 0;">ESTABLISHED IN LOVE</p>
+                <h1 style="font-family: 'Monsieur La Doulaise', cursive; font-size: 4rem; margin: 10px 0; color: var(--rose);">Marriage License</h1>
+                <div id="disp-date"></div>
+            </div>
+            <div class="cert-main-row">
+                <div class="frame"><img id="v1" crossorigin="anonymous"></div>
+                <div style="flex:1; padding:0 20px;">
+                    <h2 id="disp-names"></h2>
+                    <p id="disp-vows" style="font-size:12px; font-style:italic; color:#666;"></p>
+                </div>
+                <div class="frame"><img id="v2" crossorigin="anonymous"></div>
+            </div>
+            <div style="font-family:'Monsieur La Doulaise',cursive; font-size:2.5rem; color:var(--rose);">Infinite Love</div>
+            <div style="display:flex; justify-content:space-between; align-items:flex-end;">
+                <div class="sig-box">
+                    <img id="cert-sig1">
+                    <div class="sig-label" id="lbl1"></div>
+                </div>
+                <div class="sig-box">
+                    <img id="cert-sig2">
+                    <div class="sig-label" id="lbl2"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-/* --- Floating Shapes --- */
-function createFloatingShape() {
-  const shape = document.createElement("div");
-  shape.classList.add("shape");
-  const size=Math.random()*40+20;
-  shape.style.width=size+"px"; shape.style.height=size+"px";
-  shape.style.background=`hsl(${Math.random()*360},70%,80%)`;
-  shape.style.left=Math.random()*window.innerWidth+"px";
-  shape.style.top=Math.random()*window.innerHeight+"px";
-  document.body.appendChild(shape);
-  setTimeout(()=>{shape.remove()},8000);
-}
-setInterval(createFloatingShape, 1000);
+    <script>
+        emailjs.init("6Esqq34VB6yAXZCB3");
 
-/* --- Catch Shapes Game --- */
-let score=0;
-function playCatchGame(){
-  score=0;
-  document.getElementById("gameScore").innerText="Score: 0";
-  const gameInterval=setInterval(()=>{
-    const shape=document.createElement("div");
-    shape.classList.add("shape");
-    const size=Math.random()*40+20;
-    shape.style.width=size+"px"; shape.style.height=size+"px";
-    shape.style.background=`hsl(${Math.random()*360},70%,80%)`;
-    shape.style.left=Math.random()*window.innerWidth+"px";
-    shape.style.top=Math.random()*window.innerHeight+"px";
-    document.body.appendChild(shape);
-    shape.onclick=function(){score++; document.getElementById("gameScore").innerText="Score: "+score; shape.remove();}
-    setTimeout(()=>{shape.remove()},3000);
-  },800);
-  setTimeout(()=>{clearInterval(gameInterval); alert(`${userName}, your Catch Shapes score: ${score}`)},15000);
-}
+        // Set default date to today
+        document.getElementById('unionDate').valueAsDate = new Date();
 
-/* --- Clicker Game --- */
-let clickerPoints=0;
-function playClickerGame(){
-  clickerPoints=0;
-  const scoreDiv=document.getElementById("clickerScore");
-  scoreDiv.innerText="Click the Blue Circle!";
-  const circle=document.createElement("div");
-  circle.classList.add("shape");
-  circle.style.background="#6495ED";
-  circle.style.width="60px"; circle.style.height="60px";
-  circle.style.left="50%"; circle.style.top="50%"; circle.style.transform="translate(-50%,-50%)";
-  document.body.appendChild(circle);
-  circle.onclick=function(){
-    clickerPoints++; scoreDiv.innerText="Score: "+clickerPoints;
-    circle.style.left=Math.random()*window.innerWidth+"px";
-    circle.style.top=Math.random()*window.innerHeight+"px";
-  };
-  setTimeout(()=>{circle.remove(); alert(`${userName}, your Clicker Game score: ${clickerPoints}`)},15000);
-}
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            if(id === 'p7') renderPreview();
+        }
 
-/* --- Card Adventure Game --- */
-function playCardGame(){
-  const area=document.getElementById("cardGameArea");
-  area.innerHTML="<h3>Pick a Card!</h3>";
-  for(let i=1;i<=3;i++){
-    const card=document.createElement("div");
-    card.classList.add("card"); card.innerText="❓";
-    card.onclick=function(){
-      const rewards=["💎 Treasure!","🍀 Lucky!","💀 Try Again!"];
-      card.innerText=rewards[Math.floor(Math.random()*rewards.length)];
-      alert(`${userName}, you got: ${card.innerText}`);
-    };
-    area.appendChild(card);
-  }
-}
+        function convertLink(url) {
+            const id = url.match(/\/d\/([^\/]+)/);
+            return id ? `https://lh3.googleusercontent.com/d/${id[1]}` : url;
+        }
 
-/* --- Fun Quiz --- */
-function playQuiz(){
-  const area=document.getElementById("quizArea");
-  area.innerHTML="<h3>Which anime character are you?</h3>";
-  const answers=["Naruto","Luffy","Levi","Tanjiro"];
-  const choice=Math.floor(Math.random()*answers.length);
-  area.innerHTML+=`<p>${userName}, you are most like: <strong>${answers[choice]}</strong>!</p>`;
-}
-</script>
+        function processLinks() {
+            document.getElementById('v1').src = convertLink(document.getElementById('l1').value);
+            document.getElementById('v2').src = convertLink(document.getElementById('l2').value);
+            document.getElementById('cert-sig1').src = convertLink(document.getElementById('s1').value);
+            document.getElementById('cert-sig2').src = convertLink(document.getElementById('s2').value);
+            showPage('p3');
+        }
 
+        function sendToPartner() {
+            const n1 = document.getElementById('name1').value;
+            const link = `${window.location.origin}${window.location.pathname}?p=true&n1=${encodeURIComponent(n1)}&n2=${encodeURIComponent(document.getElementById('name2').value)}&msg=${encodeURIComponent(document.getElementById('proposalMsg').value)}&own=${encodeURIComponent(document.getElementById('initEmail').value)}&dt=${document.getElementById('unionDate').value}&l1=${encodeURIComponent(document.getElementById('l1').value)}&l2=${encodeURIComponent(document.getElementById('l2').value)}&s1=${encodeURIComponent(document.getElementById('s1').value)}&s2=${encodeURIComponent(document.getElementById('s2').value)}`;
+
+            emailjs.send("service_ip92c2u", "template_rq2ywdn", {
+                to_email: document.getElementById('emailPartner').value,
+                from_name: n1,
+                message: document.getElementById('proposalMsg').value,
+                link: link
+            }).then(() => alert("Proposal Sent!"));
+        }
+
+        window.onload = function() {
+            const p = new URLSearchParams(window.location.search);
+            if(p.get('p')) {
+                document.getElementById('name1').value = p.get('n1');
+                document.getElementById('name2').value = p.get('n2');
+                document.getElementById('l1').value = p.get('l1');
+                document.getElementById('l2').value = p.get('l2');
+                document.getElementById('s1').value = p.get('s1');
+                document.getElementById('s2').value = p.get('s2');
+                document.getElementById('unionDate').value = p.get('dt');
+                document.getElementById('partner-prop-display').innerText = p.get('msg');
+                processLinks();
+                showPage('p5');
+            }
+        };
+
+        function partnerFinalizes() {
+            const n1 = document.getElementById('name1').value;
+            const n2 = document.getElementById('name2').value;
+            document.getElementById('disp-names').innerText = n1 + " & " + n2;
+            document.getElementById('disp-vows').innerText = document.getElementById('vows').value;
+            document.getElementById('lbl1').innerText = n1.toUpperCase();
+            document.getElementById('lbl2').innerText = n2.toUpperCase();
+            document.getElementById('disp-date').innerText = new Date(document.getElementById('unionDate').value).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+            
+            const owner = new URLSearchParams(window.location.search).get('own');
+            emailjs.send("service_ip92c2u", "template_rq2ywdn", {
+                to_email: owner, 
+                from_name: n2, 
+                message: "Vows completed! Here is your final certificate link.", 
+                link: window.location.href + "&final=true"
+            });
+            showPage('p6');
+        }
+
+        function renderPreview() {
+            const area = document.getElementById('preview-area');
+            setTimeout(() => {
+                html2canvas(document.getElementById('cert-wrap'), { useCORS: true, allowTaint: true }).then(canvas => {
+                    area.innerHTML = "";
+                    area.appendChild(canvas);
+                    canvas.style.width = "100%";
+                });
+            }, 2000);
+        }
+
+        function download() {
+            html2canvas(document.getElementById('cert-wrap'), { scale: 3, useCORS: true }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'Our_Marriage_License.png';
+                link.href = canvas.toDataURL();
+                link.click();
+            });
+        }
+    </script>
 </body>
 </html>
